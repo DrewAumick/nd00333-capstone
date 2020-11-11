@@ -104,16 +104,17 @@ def create_DDoS_datasets(ws):
     }
 
     data = pd.read_csv(
-            'final_dataset.csv',
-            #dtype=dtypes,
+            './final_dataset.csv',
             parse_dates=['Timestamp'],
             usecols=[*dtypes.keys(), 'Timestamp'],
-            #nrows=10000000,
             engine='c',
             low_memory=True,
             na_filter=False
         )
-        
+
+    # There are over 12 million rows in this orignal dataset. For this project, that much data is taking far too long, so I'm randomly sampling only 1% of the data
+    data = data.sample(frac=0.01)
+
     # Register Base Dataset in Workspace
     datastore = Datastore(ws)
     name = "DDoS Dataset"
