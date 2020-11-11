@@ -11,7 +11,7 @@ from sklearn.preprocessing import OneHotEncoder
 import joblib
 from azureml.core.run import Run
 from azureml.core.workspace import Workspace
-from azureml.core.authentication import AzureCliAuthentication
+from azureml.core.authentication import MsiAuthentication
 
 from data_prep import get_DDoS_dataset
 
@@ -37,8 +37,8 @@ def main():
     run.log("Max Depth:", max_depth)
     run.log("Max Samples:", np.int(args.max_samples))
 
-    cli_auth = AzureCliAuthentication()
-    ws = Workspace.from_config(auth=cli_auth)
+    msi_auth = MsiAuthentication()
+    ws = Workspace.from_config(auth=msi_auth)
     
     dataset = get_DDoS_dataset(ws)
     
