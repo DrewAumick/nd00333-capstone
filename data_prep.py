@@ -5,7 +5,6 @@ from azureml.core import Dataset
 from azureml.core.datastore import Datastore
 from azureml.data.dataset_factory import TabularDatasetFactory
 
-
 # Searches the workspace for a dataset of the given key. If it doesn't find it, it creates the dataset from a CSV file
 def get_DDoS_dataset(ws, key="Clean DDoS Dataset"):   
     if key in ws.datasets.keys(): 
@@ -16,8 +15,8 @@ def get_DDoS_dataset(ws, key="Clean DDoS Dataset"):
             
     return dataset
 
-# Create DDoS Dataset from CSV, clean it, and register both the base version and the cleaned version to Workspace
-def create_DDoS_datasets(ws):
+# Download data from kaggle, create the DDoS Dataset, clean it, and register both the base version and the cleaned version to Workspace
+def create_DDoS_datasets(ws):  
     dtypes = {
         'Src IP': 'category',
         'Src Port': 'uint16',
@@ -104,7 +103,7 @@ def create_DDoS_datasets(ws):
     }
 
     data = pd.read_csv(
-            './final_dataset.csv',
+            './data/final_dataset.csv',
             parse_dates=['Timestamp'],
             usecols=[*dtypes.keys(), 'Timestamp'],
             engine='c',
@@ -112,8 +111,8 @@ def create_DDoS_datasets(ws):
             na_filter=False
         )
 
-    # There are over 12 million rows in this orignal dataset. For this project, that much data is taking far too long, so I'm randomly sampling only 1% of the data
-    data = data.sample(frac=0.01)
+    # There are over 12 million rows in this orignal dataset. For this project, that much data is taking far too long, so I'm randomly sampling only .5% of the data
+    data = data.sample(frac=0.005)
 
     # Register Base Dataset in Workspace
     datastore = Datastore(ws)
