@@ -4,6 +4,7 @@ from azureml.core.workspace import Workspace
 from azureml.core import Dataset
 from azureml.core.datastore import Datastore
 from azureml.data.dataset_factory import TabularDatasetFactory
+from sklearn.preprocessing import LabelEncoder
 
 # Searches the workspace for a dataset of the given key. If it doesn't find it, it creates the dataset from a CSV file
 def get_DDoS_dataset(ws, key="Clean DDoS Dataset"):   
@@ -103,12 +104,12 @@ def create_DDoS_datasets(ws):
     }
 
     data = pd.read_csv(
-            './data/final_dataset.csv',
+            './final_dataset.csv',
             parse_dates=['Timestamp'],
             usecols=[*dtypes.keys(), 'Timestamp'],
             engine='c',
             low_memory=True,
-            na_filter=False
+            na_values=np.inf
         )
 
     # There are over 12 million rows in this orignal dataset. For this project, that much data is taking far too long, so I'm randomly sampling only .5% of the data
@@ -135,35 +136,34 @@ def create_DDoS_datasets(ws):
     
 # Clean the data    
 def clean_data(df):
+    LE = LabelEncoder()
+    df['Src IP'] = LE.fit_transform(df['Src IP'])    
+    df['Dst IP'] = LE.fit_transform(df['Dst IP'])
     
+    df['Timestamp'] = df['Timestamp'].apply(lambda s: s.value)    
+        
     # Drop columns that don't impact classification 
     colsToDrop = np.array(['Fwd Byts/b Avg', 'Fwd Pkts/b Avg', 'Fwd Blk Rate Avg', 'Bwd Byts/b Avg', 'Bwd Pkts/b Avg', 'Bwd Blk Rate Avg'])
     
-    # counting unique values and checking for skewness in the data
-    #rowbuilder = lambda col: {'col': col, 'unique_values': df[col].nunique(), 'most_frequent_value': df[col].value_counts().index[0],'frequency': df[col].value_counts(normalize=True).values[0]}
-    #frequency = [rowbuilder(col) for col in df.select_dtypes(include=['category']).columns]
-    #skewed = pd.DataFrame(frequency)
-    #skewed = skewed[skewed['frequency'] >= 0.95]
-    #colsToDrop = np.union1d(colsToDrop, skewed['col'].values)
-    #df.drop(columns=colsToDrop, inplace=True)
-    
-    # Drop columns where missing values are more than 50% Drop rows where a column missing values are no more than 5%
+    # Drop columns where missing values are more than 50% 
     missing = df.isna().sum()
     missing = pd.DataFrame({'count': missing, '% of total': missing/len(df)*100}, index=df.columns)
     colsToDrop = np.union1d(colsToDrop, missing[missing['% of total'] >= 50].index.values)
+
+    # Drop rows where a column missing values are no more than 5%
     dropnaCols = missing[(missing['% of total'] > 0) & (missing['% of total'] <= 5)].index.values
-    df['Flow Byts/s'].replace(np.inf, np.nan, inplace=True)
-    df['Flow Pkts/s'].replace(np.inf, np.nan, inplace=True)
+    df = df['Flow Byts/s'].replace(np.inf, np.nan)
+    df = df['Flow Pkts/s'].replace(np.inf, np.nan)
+    
     dropnaCols = np.union1d(dropnaCols, ['Flow Byts/s', 'Flow Pkts/s'])
     df.dropna(subset=dropnaCols, inplace=True)
-    
-    # remove negative values from columns where negative values exist
-    #negValCols = ['Flow Pkts/s', 'Flow IAT Mean', 'Flow IAT Max', 'Flow IAT Min', 'Bwd IAT Tot', 'Bwd IAT Mean', 'Bwd IAT Max', 'Bwd IAT Min']
-    #for col in negValCols:
-    #    df = df[df[col] >= 0]
+
+    df.drop(columns=colsToDrop, inplace=True)
     
     # convert the label to 1 for ddos or 0 for benign
-    df["Label"] = df.Label.apply(lambda s: 1 if s == "ddos" else 0)    
+    df["Label"] = df.Label.apply(lambda s: 1 if s == "ddos" else 0)  
+
+    df = df.fillna(0)  
         
     return df
 

@@ -41,7 +41,7 @@ def main():
     dataset = Dataset.get_by_name(workspace=workspace, name=dataset_name)
 
     df = dataset.to_pandas_dataframe()
-    
+
     y = df.pop("Label")
 
     x_train, x_test, y_train, y_test = train_test_split(df,y)
