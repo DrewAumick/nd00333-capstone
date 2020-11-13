@@ -44,8 +44,8 @@ def create_DDoS_datasets(ws):
     # Clean dataset 
     data = clean_data(data)
 
-    # There are over 12 million rows in this orignal dataset. For this project, that much is crashing the VMs, so only sampling 25% 
-    data = data.sample(frac=0.25)
+    # There are over 12 million rows in this orignal dataset. For this project, that much data takes too long, so here we only sample 5% 
+    data = data.sample(frac=0.05)
 
     # Register Base Dataset in Workspace
     datastore = Datastore(ws)
