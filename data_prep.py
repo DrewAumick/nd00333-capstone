@@ -143,7 +143,7 @@ def clean_data(df):
     df['Timestamp'] = df['Timestamp'].apply(lambda s: s.value)    
         
     # Drop columns that don't impact classification 
-    colsToDrop = np.array(['Fwd Byts/b Avg', 'Fwd Pkts/b Avg', 'Fwd Blk Rate Avg', 'Bwd Byts/b Avg', 'Bwd Pkts/b Avg', 'Bwd Blk Rate Avg'])
+    colsToDrop = np.array(['Flow Byts/s', 'Flow Pkts/s','Fwd Byts/b Avg', 'Fwd Pkts/b Avg', 'Fwd Blk Rate Avg', 'Bwd Byts/b Avg', 'Bwd Pkts/b Avg', 'Bwd Blk Rate Avg'])
     
     # Drop columns where missing values are more than 50% 
     missing = df.isna().sum()
@@ -152,10 +152,10 @@ def clean_data(df):
 
     # Drop rows where a column missing values are no more than 5%
     dropnaCols = missing[(missing['% of total'] > 0) & (missing['% of total'] <= 5)].index.values
-    df['Flow Byts/s'].replace(np.inf, np.nan, inplace=True)
-    df['Flow Pkts/s'].replace(np.inf, np.nan, inplace=True)
+    #df['Flow Byts/s'].replace(np.inf, np.nan, inplace=True)
+    #df['Flow Pkts/s'].replace(np.inf, np.nan, inplace=True)
     
-    dropnaCols = np.union1d(dropnaCols, ['Flow Byts/s', 'Flow Pkts/s'])
+    #dropnaCols = np.union1d(dropnaCols, ['Flow Byts/s', 'Flow Pkts/s'])
     df.dropna(subset=dropnaCols, inplace=True)
 
     df.drop(columns=colsToDrop, inplace=True)
