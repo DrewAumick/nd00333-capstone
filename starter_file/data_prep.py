@@ -102,7 +102,7 @@ def create_DDoS_datasets(ws):
 
     data = pd.read_csv(
             '/final_ddos_dataset.csv',
-            dtype=dtypes,
+            #dtype=dtypes,
             parse_dates=['Timestamp'],
             usecols=[*dtypes.keys(), 'Timestamp'],
             engine='c',

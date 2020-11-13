@@ -152,8 +152,8 @@ def clean_data(df):
 
     # Drop rows where a column missing values are no more than 5%
     dropnaCols = missing[(missing['% of total'] > 0) & (missing['% of total'] <= 5)].index.values
-    df = df['Flow Byts/s'].replace(np.inf, np.nan)
-    df = df['Flow Pkts/s'].replace(np.inf, np.nan)
+    df['Flow Byts/s'].replace(np.inf, np.nan, inplace=True)
+    df['Flow Pkts/s'].replace(np.inf, np.nan, inplace=True)
     
     dropnaCols = np.union1d(dropnaCols, ['Flow Byts/s', 'Flow Pkts/s'])
     df.dropna(subset=dropnaCols, inplace=True)
