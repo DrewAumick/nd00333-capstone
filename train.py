@@ -37,12 +37,12 @@ def main():
     run.log("Min Samples Leaf:", np.int(args.min_samples_leaf))
 
     workspace = run.experiment.workspace
-    dataset_name = 'DDoS Dataset'
+    dataset_name = 'Malware Dataset'
     dataset = Dataset.get_by_name(workspace=workspace, name=dataset_name)
 
     df = dataset.to_pandas_dataframe()
 
-    y = df.pop("Label")
+    y = df.pop("legitimate")
 
     x_train, x_test, y_train, y_test = train_test_split(df, y, test_size=0.33)
 
