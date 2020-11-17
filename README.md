@@ -26,7 +26,6 @@ The task for this project is to train models to classify whether an executable i
 We will be downloading the data from Kaggle directly using the kaggle python api. See the Project Set Up and Installation section above to make sure you have the kaggle.json in the correct location to use this api. Once the data is downloaded, there is some minor data cleaning before the dataset is registered to the Azure ML workspace. 
 
 ## Automated ML
-*TODO*: Give an overview of the `automl` settings and configuration you used for this experiment
 The [automl](https://github.com/DrewAumick/nd00333-capstone/blob/master/automl.ipynb) notebook will run you through the steps of configuring and running the AutoML experiment. We do a Classification task on the 'legitimate' column from the malware dataset. We also set the primary metric to 'accuracy' with auto featurization, and a timeout set at 30 minutes.
 
 ### Results
@@ -35,7 +34,7 @@ The [automl](https://github.com/DrewAumick/nd00333-capstone/blob/master/automl.i
 *TODO* Remeber to provide screenshots of the `RunDetails` widget as well as a screenshot of the best model trained with it's parameters.
 
 ## Hyperparameter Tuning
-For the Hyperdrive run, I wrote a custom training script using a RandomForestClassifier from Scikit Learn. Random Forest models generally provide a high accuracy in a relatively short training time. For the hyperparameter tuning of this model, we will be tuning four different paramaters for the forest using a random parameter sampling:
+The [hyperparamter tuning](https://github.com/DrewAumick/nd00333-capstone/blob/master/hyperparameter_tuning.ipynb) notebook will run you through the steps for the Hyperdrive run. I wrote a custom training script using a RandomForestClassifier from Scikit Learn. Random Forest models generally provide a high accuracy in a relatively short training time. For the hyperparameter tuning of this model, we will be tuning four different paramaters for the forest using a random parameter sampling:
 * n_estimators: The number of trees in the Random forrest - choice of 10, 50, 100, 150, 200
 * max_depth: The maximum depth of the trees in the forrest - choice of 0, 2, 5, 10
 * min_samples_split: The minimum number of samples required to split an internal node - choice of 2, 3, 4, 5
