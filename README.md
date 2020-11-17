@@ -1,11 +1,19 @@
-*NOTE:* This file is a template that you can use to create the README for your project. The *TODO* comments below will highlight the information you should be sure to include.
+# Udacity Azure ML Nanodegree Capstone Project - Classifying Malware
 
-# Your Project Title Here
+Malware is any software designed to intentionally cause harm to a computer system. Viruses, trojans, worms, and ransomware are just a few examples of the types of malicious programs that can find their way on to systems. It is estimated that Wannacry, just one example of ransomware, has already cost over $4 billion and another ransomware attack on a hospital in Germany lead to a woman's death. 
 
-*TODO:* Write a short introduction to your project.
+New malware is being created at an alarming rate. Over 400,000 new malwares were identified in 2019 alone and that rate is expected to be higher for 2020. This makes the old methods of signature-based malware detection grossly inefficient. By the time a signature has been created and distributed, the new malware could have already have infected numerous systems. 
+
+To combat this threat, researchers are turning to Machine Learning to help identify malware before it can infect a system. In this project, I will be using a public dataset from Kaggle to train several models to attempt to classify if an exicutible is malware or not. 
 
 ## Project Set Up and Installation
-*OPTIONAL:* If your project has any special installation steps, this is where you should put it. To turn this project into a professional portfolio project, you are encouraged to explain how to set up this project in AzureML.
+
+To run this project, you will need an active account on Kaggle. From Kaggle, go to your account settings and click the 'Create New API Token' button to download your kaggle.json file. From Azure ML Studio on the Notebooks UI, upload the kaggle.json file and the whole directory from this github repository. Then open a ternimal for the compute instance you will be running the notebooks in. Run the following commands: 
+
+```
+cp kaggle.json /home/azureuser/.kaggle/
+chmod 600 /home/azureuser/.kaggle/kaggle.json
+```
 
 ## Dataset
 
