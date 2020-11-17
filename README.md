@@ -7,7 +7,6 @@ New malware is being created at an alarming rate. Over 400,000 new malwares were
 To combat this threat, researchers are turning to Machine Learning to help identify malware before it can infect a system. In this project, I will be using a public dataset from Kaggle to train several models to attempt to classify if an exicutible is malware or not. 
 
 ## Project Set Up and Installation
-
 To run this project, you will need an active account on Kaggle. From Kaggle, go to your account settings and click the 'Create New API Token' button to download your kaggle.json file. From Azure ML Studio on the Notebooks UI, upload the kaggle.json file and the whole directory from this github repository. Then open a ternimal for the compute instance you will be running the notebooks in. Run the following commands: 
 
 ```
@@ -18,16 +17,17 @@ chmod 600 /home/azureuser/.kaggle/kaggle.json
 ## Dataset
 
 ### Overview
-*TODO*: Explain about the data you are using and where you got it from.
+The Portable Executable (PE) format is a file format for executables, object code, DLLs and others used in 32-bit and 64-bit versions of Windows operating systems. The header of PE files contains a number for things like the size of the file, imported libraries, and more. This dataset from [Kaggle](https://www.kaggle.com/divg07/malware-analysis-dataset) contains data extracted from PE headers from both known malware samples and benign software samples.
 
 ### Task
-*TODO*: Explain the task you are going to be solving with this dataset and the features you will be using for it.
+The task for this project is to train models to classify whether an executable is malware or benign using features extracted from their PE Header. The 'legitimate' column in the dataset is 1 when the executible file is from a legitimate source (aka benign software or goodware), and 0 when it is malware.  
 
 ### Access
-*TODO*: Explain how you are accessing the data in your workspace.
+We will be downloading the data from Kaggle directly using the kaggle python api. See the Project Set Up and Installation section above to make sure you have the kaggle.json in the correct location to use this api. Once the data is downloaded, there is some minor data cleaning before the dataset is registered to the Azure ML workspace. 
 
 ## Automated ML
 *TODO*: Give an overview of the `automl` settings and configuration you used for this experiment
+The [automl](https://github.com/DrewAumick/nd00333-capstone/blob/master/automl.ipynb) notebook will run you through the steps of configuring and running the AutoML experiment. We do a Classification task on the 'legitimate' column from the malware dataset. We also set the primary metric to 'accuracy' with auto featurization, and a timeout set at 30 minutes.
 
 ### Results
 *TODO*: What are the results you got with your automated ML model? What were the parameters of the model? How could you have improved it?
@@ -35,8 +35,11 @@ chmod 600 /home/azureuser/.kaggle/kaggle.json
 *TODO* Remeber to provide screenshots of the `RunDetails` widget as well as a screenshot of the best model trained with it's parameters.
 
 ## Hyperparameter Tuning
-*TODO*: What kind of model did you choose for this experiment and why? Give an overview of the types of parameters and their ranges used for the hyperparameter search
-
+For the Hyperdrive run, I wrote a custom training script using a RandomForestClassifier from Scikit Learn. Random Forest models generally provide a high accuracy in a relatively short training time. For the hyperparameter tuning of this model, we will be tuning four different paramaters for the forest using a random parameter sampling:
+* n_estimators: The number of trees in the Random forrest - choice of 10, 50, 100, 150, 200
+* max_depth: The maximum depth of the trees in the forrest - choice of 0, 2, 5, 10
+* min_samples_split: The minimum number of samples required to split an internal node - choice of 2, 3, 4, 5
+* min_samples_leaf: The minimum number of samples required to be at a leaf node - choice of 1, 2, 3, 4, 5
 
 ### Results
 *TODO*: What are the results you got with your model? What were the parameters of the model? How could you have improved it?
