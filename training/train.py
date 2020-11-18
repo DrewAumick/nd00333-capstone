@@ -57,14 +57,12 @@ def main():
     joblib.dump(model, './outputs/model.joblib')
 
     accuracy = model.score(x_test, y_test)
-    #AUC = auc(x_test, y_test)
     y_pred = model.predict(x_test)
     f1 = f1_score(y_test, y_pred)
     precision = precision_score(y_test, y_pred)
     recall = recall_score(y_test, y_pred)
 
     run.log("Accuracy", np.float(accuracy))
-    #run.log("AUC", np.float(AUC))
     run.log("F1", np.float(f1))
     run.log("Precision", np.float(precision))
     run.log("Recall", np.float(recall))
